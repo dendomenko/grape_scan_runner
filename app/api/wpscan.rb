@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'pry'
+
 module Wpscan
   class API < Grape::API
     version 'v1', using: :header, vendor: 'wpscan'
@@ -12,8 +14,12 @@ module Wpscan
         requires :url, type: String
       end
       post :scan do
-        RequestJob.perform_async params[:url]
+        RequestValidator.check_json_params(params.to_json)
+        RequestJob.perform_async(RequestValidator.parse_params(params))
         { status: 'The request is being processed' }
+      rescue JSON::Schema::ValidationError => e
+        puts e.to_json
+        { errors: e.to_json }
       end
     end
   end
