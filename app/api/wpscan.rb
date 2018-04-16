@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Wpscan
   class API < Grape::API
     version 'v1', using: :header, vendor: 'wpscan'
@@ -11,7 +13,7 @@ module Wpscan
       end
       post :scan do
         RequestJob.perform_async params[:url]
-        {status: 'The request is being processed' }
+        { status: 'The request is being processed' }
       end
     end
   end
