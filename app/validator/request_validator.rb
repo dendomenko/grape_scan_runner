@@ -2,9 +2,9 @@
 
 require 'json-schema'
 
+# Wpscan arguments validator and parser
 class RequestValidator
   class << self
-
     include Schema
 
     def check_json_params(json_data)
@@ -12,13 +12,8 @@ class RequestValidator
     end
 
     def parse_params(params)
-      params.map do |key, value|
-        if value.is_a? TrueClass
-          "--#{key}"
-        else
-          "--#{key} #{value}"
-        end
-      end.join(' ')
+      params.map { |key, value| value.is_a?(TrueClass) ? "--#{key}" : "--#{key} #{value}" }
+            .join(' ')
     end
   end
 end

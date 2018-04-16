@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+
+# Schema of valid params for wpscan
 module Schema
   VALID_REQUEST_SCHEMA = {
     'type': 'object',

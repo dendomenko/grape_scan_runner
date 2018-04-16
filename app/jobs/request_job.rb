@@ -3,6 +3,7 @@
 require 'json'
 require 'net/http'
 
+# A job which just runs wpscan and sends a result to callback URI
 class RequestJob
   include SuckerPunch::Job
 
@@ -13,6 +14,9 @@ class RequestJob
       f.write(output.to_json)
     end
     send_callback(output)
+  rescue JSON::ParserError => e
+    puts e.to_json
+    send_callback({ errors: e })
   end
 
   private
