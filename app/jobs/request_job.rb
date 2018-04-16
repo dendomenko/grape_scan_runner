@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'json'
-SuckerPunch.logger = Logger.new('sucker_punch.log')
+require 'net/http'
 
 class RequestJob
   include SuckerPunch::Job
@@ -12,5 +12,13 @@ class RequestJob
     File.open("public/responses/#{Time.now.to_i}.json", 'w') do |f|
       f.write(output.to_json)
     end
+    send_callback(output)
+  end
+
+  private
+
+  def send_callback(data)
+    uri = URI('http://localhost:9292/api/v1/callback')
+    Net::HTTP.post_form(uri, data)
   end
 end

@@ -9,7 +9,6 @@ module Wpscan
     prefix :api
 
     resource :v1 do
-      desc 'Return a public timeline.'
       params do
         requires :url, type: String
       end
@@ -20,6 +19,10 @@ module Wpscan
       rescue JSON::Schema::ValidationError => e
         puts e.to_json
         { errors: e.to_json }
+      end
+
+      post :callback do
+        # TODO: add some logic
       end
     end
   end
