@@ -8,7 +8,7 @@ class RequestJob
   include SuckerPunch::Job
 
   def perform(command_params)
-    command = "docker run --rm wpscanteam/wpscan-v3 --no-banner #{command_params} -f json"
+    command = "wpscan --no-update --no-banner #{command_params} -f json"
     output = JSON.parse(`#{command}`)
     File.open("public/responses/#{Time.now.to_i}.json", 'w') do |f|
       f.write(output.to_json)
@@ -22,7 +22,7 @@ class RequestJob
   private
 
   def send_callback(data)
-    uri = URI('http://localhost:9292/api/v1/callback')
+    uri = URI('http://localhost:3000/api/v1/callback')
     Net::HTTP.post_form(uri, data)
   end
 end

@@ -7,8 +7,11 @@ class RequestValidator
   class << self
     include Schema
 
-    def check_json_params(json_data)
-      JSON::Validator.validate!(VALID_REQUEST_SCHEMA, json_data)
+    def check_json_params(params)
+      if (VALID_REQUEST_SCHEMA[:properties].keys & params.keys.map(&:to_sym)).size != params.keys.size
+        raise 'Wrong arguments'
+      end
+      JSON::Validator.validate!(VALID_REQUEST_SCHEMA, params.to_json)
     end
 
     def parse_params(params)

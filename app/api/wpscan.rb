@@ -13,16 +13,23 @@ module Wpscan
         requires :url, type: String
       end
       post :scan do
-        RequestValidator.check_json_params(params.to_json)
+        RequestValidator.check_json_params(params)
         RequestJob.perform_async(RequestValidator.parse_params(params))
         { status: 'The request is being processed' }
       rescue JSON::Schema::ValidationError => e
         { errors: e.to_json }
+      rescue => e
+        { errors: e.message }
       end
 
       post :callback do
         puts params # just check response
         # TODO: add some logic
+      end
+
+      get :update do
+        UpdateJob.perform_async
+        { status: 'Wpscan database update started' }
       end
     end
   end
