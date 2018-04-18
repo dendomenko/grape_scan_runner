@@ -17,9 +17,9 @@ module Wpscan
         RequestJob.perform_async(RequestValidator.parse_params(params))
         { status: 'The request is being processed' }
       rescue JSON::Schema::ValidationError => e
-        { errors: e.to_json }
+        { error: e.to_json }
       rescue => e
-        { errors: e.message }
+        { error: e.message }
       end
 
       post :callback do

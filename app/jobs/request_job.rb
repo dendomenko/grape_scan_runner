@@ -15,14 +15,13 @@ class RequestJob
     end
     send_callback(output)
   rescue JSON::ParserError => e
-    puts e.to_json
-    send_callback({ errors: e })
+    send_callback({ error: e })
   end
 
   private
 
   def send_callback(data)
-    uri = URI('http://localhost:3000/api/v1/callback')
+    uri = URI('http://localhost:9293/api/v1/callback') #change uri fo
     Net::HTTP.post_form(uri, data)
   end
 end
